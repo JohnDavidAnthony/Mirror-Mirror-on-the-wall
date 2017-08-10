@@ -829,6 +829,7 @@ function getNews(){
    * the authorized user's calendar. If no events are found an
    * appropriate message is printed.
    */
+	cycledNewsStart = false
     function listUpcomingEvents() {
     	document.getElementById("calendarCheckbox").innerHTML = "";
     	var userCalendarID = [];
@@ -887,8 +888,10 @@ function getNews(){
 		}      
     }
 
-	cycleNews();
-	setInterval(cycleNews, 30000);
+    if (!cycledNewsStart){
+    	cycleNews();
+		setInterval(cycleNews, 30000);
+    }	
 
 </script>
 <script async defer src="https://apis.google.com/js/api.js"
