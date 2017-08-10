@@ -127,6 +127,8 @@ function StartClock(){
 					this.parentElement.style.display='none'
 					setCookie("formCompleted",true)
 					setCookie("newsSelected",true);
+					x = document.getElementById("newsDropDown").value;
+					setCookie("newsSourceSelected",x)
 					cycleNews();
 
 
@@ -500,10 +502,15 @@ function getFutureWeather(){
 // Gets News
 currentNewsArray = 0;
 function cycleNews(data){
-	if (getCookie("newsSelected") == false){
-		newsSource = "google-news";
+	if (getCookie("newsSourceSelected")==false){
+		if (getCookie("newsSelected") == false){
+			newsSource = "google-news";
+		}else{
+			newsSource = document.getElementById("newsDropDown").value;
+			setCookie("newsSourceSelected",newsSource)
+		}
 	}else{
-		newsSource = document.getElementById("newsDropDown").value;
+		newsSource = getCookie("newsSourceSelected");
 	}
 
 	jQuery.getJSON('https://newsapi.org/v1/articles?source='+newsSource+'&apiKey=416579f01f5946219ae65d094ab1d1f5', function(data) {
@@ -513,13 +520,21 @@ function cycleNews(data){
 
 
 		if (currentNewsArray < 9){
-			description.innerHTML= `${data.articles[currentNewsArray].description}`
+			if (`${data.articles[currentNewsArray].description}` == undefined){
+				description.innerHTML= ""
+			}else{
+				description.innerHTML= `${data.articles[currentNewsArray].description}`
+			}
+			
 			title.innerHTML= `${data.articles[currentNewsArray].title}`
 			currentNewsArray= currentNewsArray + 1;
 		}else {
 			currentNewsArray = 0;
-			description.innerHTML= `${data.articles[currentNewsArray].description}`
-			title.innerHTML= `${data.articles[currentNewsArray].title}`
+			if (`${data.articles[currentNewsArray].description}` == undefined){
+				description.innerHTML= ""
+			}else{
+				description.innerHTML= `${data.articles[currentNewsArray].description}`
+			}
 		}
 		
 	});
@@ -889,8 +904,9 @@ function getNews(){
     }
 
     if (!cycledNewsStart){
-    	cycleNews();
-		setInterval(cycleNews, 30000);
+    	if (getCookie("newsSelected") != false)
+	    	cycleNews();
+			setInterval(cycleNews, 30000);
     }	
 
 </script>
