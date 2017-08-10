@@ -12,7 +12,10 @@ See the [live Demo!](http://johndavidanthony.me/Pages/SmartMirror/SmartMirror.ht
 
 ## Getting Started
 
-All you need to do to add this to your website is to download the files and place them in a folder on your website. 
+All you need to do to add this to your website is to download the files and place them in a folder on your website.
+
+## Tutorial
+Information will be added here soon
 
 ## ToDo
 * Add today’s high and low temperatures
