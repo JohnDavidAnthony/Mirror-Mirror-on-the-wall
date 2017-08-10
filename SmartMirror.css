@@ -1,0 +1,300 @@
+h1{
+	text-align: center;
+	position: fixed;
+	width: 100%;
+	bottom: 0;
+  	font-size:13vw;
+  	font-family: 'HelveticaNeue-UltraLight', 'Helvetica Neue UltraLight', 'Helvetica Neue', 'Open-Light', sans-serif;
+  	font-weight:lighter;
+  	color: white;
+  	height: 6vw;
+}
+
+
+body{
+	font-family: 'HelveticaNeue-UltraLight', 'Helvetica Neue UltraLight', 'Helvetica Neue', 'Open-Light', sans-serif;
+	background-color: black;
+	color: white;
+}
+
+html {
+	font-family: 'HelveticaNeue-UltraLight', 'Helvetica Neue UltraLight', 'Helvetica Neue', 'Open-Light', sans-serif;
+    position: relative;
+    min-height: 100%;
+    color: white;
+}
+h2{
+	font-family: 'HelveticaNeue-UltraLight', 'Helvetica Neue UltraLight', 'Helvetica Neue', 'Open-Light', sans-serif;
+	font-weight:lighter;
+	text-align: right;
+	font-size: 1.5vw;
+	margin-bottom: 0;
+	margin-top: 0;
+	color: white;
+	margin-left: 83vw;
+	text-align: left;
+	margin-right: 0;
+	float: right;
+	margin-top: 1vw;
+	opacity: 0.5;
+}
+h3{
+	font-family: 'HelveticaNeue-UltraLight', 'Helvetica Neue UltraLight', 'Helvetica Neue', 'Open-Light', sans-serif;
+	font-weight:lighter;
+	text-align: left;
+	font-size: 1.5vw;
+	color: white;
+}
+button{
+	text-align: center;
+}
+
+/* The alert message box */
+.welcome,.googleSignIn,.locationSelect,.calendarSelect,.newsSelect{
+	line-height: 2vw;
+	font-size: 1.5vw;
+	text-align: center;
+    padding: 20px;
+    background-color: #f44336; /* Red */
+    color: white;
+    margin-bottom: 15px;
+    display: none;
+}
+
+/* The close button */
+.closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 3vw;
+    line-height: .2vw;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* When moving the mouse over the close button */
+.closebtn:hover {
+    color: black;
+}
+
+#now{
+	margin-left: 85vw;
+	text-align: center;
+	margin-right: 3vw;
+	opacity: 1;
+	float: none;
+	font-size: 2vw;
+
+}
+body {
+    overflow:hidden;
+}
+#currentWeatherIcon{
+	margin-left: 85vw;
+	text-align: center;
+	margin-right: 0;
+	opacity: 1;
+}
+#weatherTemperature{
+	padding-top: 16vw;
+	font-size: 6vw;
+/*	margin-top: 4vw;*/
+	opacity: 1;
+	float: none;
+}
+#weatherDescriptionLabel{
+	opacity: 1;
+	margin-left: 70;
+	text-align: center;
+	margin-right:0vw;
+	float: none;
+}
+#currentWeatherIcon{
+	float: none;
+}
+img {
+    margin-left: 85vw;
+	text-align: center;
+	margin-right: 0;
+	float: right;
+}
+hr{
+	width: 15vw;
+}
+.day1,.day2,.day3,.day4,.day5{
+	margin:0;
+	margin-right: 5px;
+	float: right;
+    display:inline
+}
+#calendarDiv{
+	padding-top: 16vw;
+	float: left;
+	max-width: 25vw;
+}
+.calendar{
+	display:inline
+	margin-top: 5vw;
+	float: left;
+}
+#calendar0,#calendar1,#calendar2,#calendar3,#calendar4,#calendar5,#calendar6,#calendar7,#calendar8{
+	display: inline-block;
+	clear: left;
+	margin-top: 1vw;
+}
+#select-calendar-button{
+	clear: left;
+	display: inline-block;
+}
+.checkbox{
+	font-family: 'HelveticaNeue-UltraLight', 'Helvetica Neue UltraLight', 'Helvetica Neue', 'Open-Light', sans-serif;
+	color: white;
+	float: left;
+	clear: left;
+	display: inline-block;
+}
+#day2WeatherIcon{
+	display: block;
+	clear: right;
+	margin-top: 1vw;
+}
+#day3WeatherIcon{
+	display: block;
+	clear: right;
+	margin-top: 1vw;
+}
+#day4WeatherIcon{
+	display: block;
+	clear: right;
+	margin-top: 1vw;
+}
+#day5WeatherIcon{
+	display: block;
+	clear: right;
+	margin-top: 1vw;
+}
+#rssScrollerDescription{
+	font-family: 'HelveticaNeue-UltraLight', 'Helvetica Neue UltraLight', 'Helvetica Neue', 'Open-Light', sans-serif;
+	font-weight: lighter;
+	position: relative;
+ 	width: auto;
+ 	font-size: 2vw;
+ 	margin-top: 1vw;
+ 	margin-bottom: .5vw;
+ 	height: 100%;
+ 	text-align: left;
+ 	color: white;
+ 	padding-top: 1vw;
+ 	padding-bottom: 3vw;
+ 	padding-left: 100%;
+ 	white-space: nowrap;
+ 	display: inline-block;
+ 	/* Starting position */
+	-moz-transform:translateX(100%);
+	-webkit-transform:translateX(100%);	
+	transform:translateX(100%);
+ /* Apply animation to this element */	
+ 	-moz-animation: left-scroll 30s linear infinite;
+ 	-webkit-animation: left-scroll 30s linear infinite;
+ 	animation: left-scroll 30s linear infinite;
+ 	-webkit-animation-play-state: paused; /* Safari 4.0 - 8.0 */
+    animation-play-state: paused;
+}
+
+/* Move it (define the animation) */
+
+@-moz-keyframes left-scroll {
+ 0%   { -moz-transform: translateX(100%); }
+ 100% { -moz-transform: translateX(-100%); }
+}
+@-webkit-keyframes left-scroll {
+ 0%   { -webkit-transform: translateX(100%); }
+ 100% { -webkit-transform: translateX(-100%); }
+}
+@keyframes left-scroll {
+ 0%   { 
+ -moz-transform: translateX(7%); /* Firefox bug fix */
+ -webkit-transform: translateX(7%); /* Firefox bug fix */
+ transform: translate(7%, 0);
+ animation-timing-function: cubic-bezier(.75,.76,1,.88); 	
+ }
+ 95% { 
+ -moz-transform: translateX(-88%); /* Firefox bug fix */
+ -webkit-transform: translateX(-88%); /* Firefox bug fix */
+ transform: translate(-88%, 0); 
+ animation-timing-function: cubic-bezier(.16,.68,1,.88);
+ }
+ 100% { 
+ -moz-transform: translateX(-110%); /* Firefox bug fix */
+ -webkit-transform: translateX(-110%); /* Firefox bug fix */
+ transform: translate(-110%, 0); 
+ animation-timing-function: linear;
+ }
+}
+
+#rssScrollerTitle{
+	font-family: 'HelveticaNeue-UltraLight', 'Helvetica Neue UltraLight', 'Helvetica Neue', 'Open-Light', sans-serif;
+	font-weight: bold;
+	font-size: 3vw;
+	position: relative;
+ 	width: 100%;
+ 	height: 3vw;
+ 	margin-top: 1vw;
+ 	padding-right: 100%;
+ 	color: white;
+ 	text-align: center;
+ 	display: inline-block;
+ 	/*Starting Position*/
+	-moz-transform:translateX(-100%);
+	-webkit-transform:translateX(-100%);	
+	transform:translateX(-100%);
+	/*Apply Animation to Element*/
+ 	-moz-animation: title-scroll 30s ease-in-out infinite;
+ 	-webkit-animation: title-scroll 30s ease-in-out infinite;
+ 	animation: title-scroll 30s ease-in-out infinite;
+ 	-webkit-animation-play-state: paused; /* Safari 4.0 - 8.0 */
+    animation-play-state: paused;
+}
+
+/*Title Scrolling*/
+@-moz-keyframes title-scroll {
+ 0%   { -moz-transform: translateX(-100%); }
+ 100% { -moz-transform: translateX(100%); }
+}
+@-webkit-keyframes title-scroll {
+ 0%   { -webkit-transform: translateX(-100%); }
+ 100% { -webkit-transform: translateX(100%); }
+}
+@keyframes title-scroll {
+ 0%   { 
+ -moz-transform: translateX(-200%); /* Firefox bug fix */
+ -webkit-transform: translateX(-200%); /* Firefox bug fix */
+ transform: translateX(-200);
+ animation-timing-function: ease-in-out; 	
+ }	
+ 5%   { 
+ -moz-transform: translateX(-50%); /* Firefox bug fix */
+ -webkit-transform: translateX(-50%); /* Firefox bug fix */
+ transform: translateX(-50%);
+ animation-timing-function: ease-in-out; 	
+ }
+ 9%   { 
+ -moz-transform: translateX(0%); /* Firefox bug fix */
+ -webkit-transform: translateX(0%); /* Firefox bug fix */
+ transform: translateX(0%);
+ animation-timing-function: ease-in-out; 
+ }
+95%   { 
+ -moz-transform: translateX(0%); /* Firefox bug fix */
+ -webkit-transform: translateX(0%); /* Firefox bug fix */
+ transform: translateX(0%);
+ animation-timing-function: ease-in-out;
+ }
+ 100% { 
+ -moz-transform: translateX(100vw); /* Firefox bug fix */
+ -webkit-transform: translateX(100vw); /* Firefox bug fix */
+ transform: translateX(100vw); 
+ animation-timing-function: ease-in-out; 
+ }
+}

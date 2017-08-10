@@ -1,0 +1,902 @@
+<!DocType html> 
+<!-- Need this so the browser knows the file is of type html5 -->
+
+<html>
+
+	<head>
+		<title>John David Anthony</title>
+		<!-- Link the Css file in the header -->
+		<!-- using href we can link it to the resume.css file -->
+		<link rel="stylesheet" type="text/css" href="SmartMirror.css">
+<!-- Google Analytics -->
+	<script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+	  ga('create', 'UA-102888151-1', 'auto');
+	  ga('send', 'pageview');
+
+	</script>
+<!-- Clock Function -->
+<script type="text/javascript">
+// To Do
+// Add in text field for user to put their address
+// And add in text field for user to put in their news
+
+
+
+
+
+
+
+function StartClock(){
+	// CreatesVariables getting the hours, minutes, seconds
+	// Also checks if num is < 10 to put a 0 in front of num
+	var today = new Date();
+	var h = today.getHours();
+	if (h > 12) {h = h - 12};
+	if (h < 10) {h = "0"+ h};
+	var m = today.getMinutes();
+	if (m < 10) {m = "0" + m};
+	var s = today.getSeconds();
+	if (s < 10) {s = "0" + s};
+	document.getElementById('clock').innerHTML =
+    h + ":" + m + ":" + s;
+    var t = setTimeout(StartClock, 500);
+}
+
+</script>
+
+	</head>
+	<body onload="StartClock()">
+	<!-- Jquery/JSON script from http://zetcode.com/articles/javascriptjsonurl/ -->
+	<!-- Not really sure how it works -->
+	<!-- Loads JQuery -->
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+	<!-- Welcome box -->
+		<div class="welcome" id="welcome">
+  			<span class="closebtn" onclick="this.parentElement.style.display='none';document.getElementById('googleSignIn').style.display = 'block' ">&times;</span> 
+  			Welcome to JD Anthony's Magic Mirror! Recommend you go to ***ADD LINK HERE*** for documentation and to see it in action. <br>
+  			<button id="next" onclick="this.parentElement.style.display='none';document.getElementById('googleSignIn').style.display = 'block'">Next</button>
+		</div>
+
+		<div class="googleSignIn" id="googleSignIn">
+  			<span class="closebtn" onclick="this.parentElement.style.display='none';;document.getElementById('calendarSelect').style.display = 'block' ">&times;</span> 
+
+  			Please authorize with google in order to view your upcoming events on the left.
+  			<!--Add buttons to initiate auth sequence and sign out-->
+  			<button id="authorize-button" style="display: none;" onclick="this.parentElement.style.display='none';document.getElementById('calendarSelect').style.display = 'block'; handleAuthClick()">Authorize</button>
+  			<button id="signout-button" style="display: none;" onclick = "handleSignoutClick()">Sign Out</button>
+  			<button id="next" onclick="this.parentElement.style.display='none';document.getElementById('calendarSelect').style.display = 'block'">Next</button>
+		</div>
+
+		<div class="calendarSelect" id="calendarSelect">
+  			<span class="closebtn" onclick="this.parentElement.style.display='none';document.getElementById('locationSelect').style.display = 'block' ">&times;</span> 
+  			Please select which calendars you want to display. <br>
+  			<!-- selecting Calendar -->
+			<div id="calendarCheckbox" class="calendarCheckbox"></div>
+			<button id="select-calendar-button" style="display: none;" onclick="this.parentElement.style.display='none';document.getElementById('locationSelect').style.display = 'block'; handleCalendarClick()">Confirm Choices</button>
+		</div>
+
+		<div class="locationSelect" id="locationSelect">
+  			<span class="closebtn" onclick="this.parentElement.style.display='none';document.getElementById('newsSelect').style.display = 'block' ">&times;</span> 
+  			Please enter your city or address in order to get relevent weather information.
+  			<form onsubmit="getAllWeather()"> 
+	  			City/Address
+	  			<input type="text" id = "locationInput" name="locationInput" placeholder = "Toronto, ON"><br>
+	  		</form>
+	  		<!-- Stops page from refreshing or redirecting -->
+			<script>
+				$('form').submit(function (evt) {
+					evt.preventDefault(); //prevents the default action
+				});
+			</script>
+		</div>
+
+		<div class="newsSelect" id="newsSelect">
+  			<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+  			Please select your prefered news source. <sub>Powered by NewsAPI.org.</sub>
+  			<form onsubmit="getNews()"> 
+	  			News Source
+	  			<select name="News Source" id = newsDropDown>
+					<option value="bbc-news">BBC News</option>
+					<option value="cnbc">CNBC</option>
+					<option value="cnn">CNN</option>
+					<option value="daily-mail">Daily Mail</option>
+					<option value="entertainment-weekly">Entertainment Weekly</option>
+					<option value="google-news">Google News</option>
+					<option value="independent">The Independent</option>
+					<option value="national-geographic">National Geographic</option>
+					<option value="newsweek">News Week</option>
+					<option value="techcrunch">Tech Crunch</option>
+					<option value="the-economist">The Economist</option>
+					<option value="the-verge">The Verge</option>
+					<option value="the-wall-street-journal">The Wall Street Journal</option>
+					<option value="the-washington-post">The Washington Post</option>
+					<option value="time">Time</option>	
+				</select>
+				<br>
+				<input type="submit" value="Submit">
+	  		</form>
+	  		<!-- Stops page from refreshing or redirecting -->
+			<script>
+				$('form').submit(function (evt) {
+					evt.preventDefault(); //prevents the default action
+					this.parentElement.style.display='none'
+					setCookie("formCompleted",true)
+					setCookie("newsSelected",true);
+					cycleNews();
+
+
+				});
+			</script>
+		</div>
+
+<!-- Creating all Elements -->
+	<!-- Rss Feed -->
+		<h4 id="rssScrollerTitle">Rss Title Here</h4>
+		<h4 id="rssScrollerDescription">Rss Description Here</h4>
+	
+	<!-- Calendar -->
+		<div id="calendarDiv" this.style.display='none'>
+			<h3 id="calendarTodayTitle">There's Nothing on your calendar today!</h3>
+			<hr width="100vw" align="left">
+			<h3 id="calendarToday"></h3>
+			<h3 id="calendarTomorrowTitle">Theres nothing on your calendar tomorrow!</h3>
+		</div>
+	<!-- Todays Weather -->
+		<h2 id="weatherTemperature"></h2>
+		<img id="currentWeatherIcon" src="Assets/loading.gif" style="width:10vw"; ">
+		<h2 id ="now"'></h2>
+		<h2 id="weatherDescriptionLabel"></h2>
+		<hr width="100vw" align="right">
+	<!-- Future Weather -->
+
+		<img class="day1" id="day1WeatherIcon" src="Assets/loading.gif" style="width:5vw"; ">
+		<h2 class="day1" id="day1WeatherTemp"></h2>
+		<h2 class ="day1" id ="day1"'></h2>
+		<!-- <h2 class="day1" id="day1WeatherDescription">Weather Description</h2> -->
+
+		<!-- Day 2 -->
+		<img class="day2" id="day2WeatherIcon" src="Assets/loading.gif" style="width:5vw"; ">
+		<h2 class="day2" id="day2WeatherTemp"></h2>
+		<h2 class="day2" id ="day2"'></h2>
+		<!-- <h2 id="day2WeatherDescription">Weather Description</h2> -->
+
+		<!-- Day 3 -->
+		<img class="day3" id="day3WeatherIcon" src="Assets/loading.gif" style="width:5vw"; ">
+		<h2 class="day3" id="day3WeatherTemp"></h2>
+		<h2 class="day3" id ="day3"'></h2>
+		<!-- <h2 id="day3WeatherDescription">Weather Description</h2> -->
+
+		<!-- Day 4 -->
+		<img class="day4" id="day4WeatherIcon" src="Assets/loading.gif" style="width:5vw"; ">
+		<h2 class="day4" id="day4WeatherTemp"></h2>
+		<h2 class="day4" id ="day4"'></h2>
+		<!-- <h2 id="day4WeatherDescription">Weather Description</h2> -->
+
+		<!-- Day 5 -->
+		<img class="day5" id="day5WeatherIcon" src="Assets/loading.gif" style="width:5vw"; ">
+		<h2 class="day5" id="day5WeatherTemp"></h2>
+		<h2 class="day5" id ="day5"'></h2>
+		<!-- <h2 id="day5WeatherDescription">Weather Description</h2> -->
+	<!-- Clock -->
+		<h1 id="clock">Time Here</h1>
+		<!-- Script grabs data from open weather and puts it into some variables -->
+
+<script>
+	var latitude = 43.753180;
+	var longitude = -79.339731;
+
+// Work arround for form submit
+function getAllWeather(){
+	document.getElementById("newsSelect").style.display='block'
+	var address = document.getElementById("locationInput").value;
+	setCookie("locationInput",address);
+	setCookie("locationSelected",true);
+	getCurrentWeather();
+	getFutureWeather();
+	document.getElementById("locationSelect").style.display='none';
+}
+// Gets a cookie if it exists, otherwise returns false
+function getCookie(name) {
+	var nameEQ = name + "=";
+	var ca = document.cookie.split(';');
+	for(var i=0;i < ca.length;i++) {
+		var c = ca[i];
+		while (c.charAt(0)==' ') c = c.substring(1,c.length);
+		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+	}
+	return false;
+}
+function setCookie(cname, value){
+	document.cookie = cname+"="+value+"; expires=Fri, 10 Dec 2023 12:00:00 UTC; path=/";
+}
+function eraseCookie(cname) {
+	document.cookie = cname+"="+""+"; expires=Fri, 4 Aug 2017 12:00:00 UTC; path=/";;
+}
+// Checks if user has been here before
+function welcomeMessage(){
+	if (getCookie("formCompleted") == false){
+		document.getElementById("welcome").style.display = 'block';
+		console.log("user's first time on the site (No cookie found)");
+	}else{
+		document.getElementById("welcome").style.display = 'none';
+		console.log("user has been here - loading saved presets");
+	}
+}
+// ---------------------------------------------------------------------------------------------
+// Gets the weather data for Today
+function getCurrentWeather(){
+	console.log("get current weather run")
+	// gets the JSON data from open weather map
+	// jQuery.getJSON('http://api.openweathermap.org/data/2.5/weather?id=6167865&APPID=dec6af11d23906a2380e2214c2416010', function(data) {
+
+	if (getCookie("locationSelected")){
+		var address = getCookie("locationInput");
+	}else if(getCookie("locationInput")!=false){
+		var address = getCookie("locationInput");
+	}
+
+	console.log("Input "+address)
+	var addressString = "http://maps.google.com/maps/api/geocode/json?address="+address
+	console.log("Addres String "+addressString)
+	jQuery.getJSON(addressString, function(data) {
+		console.log(data)
+		latitude = data.results[0].geometry.location.lat
+		longitude = data.results[0].geometry.location.lng
+		document.cookie = "latitude="+latitude+"; expires=Fri, 10 Dec 2023 12:00:00 UTC";
+		document.cookie = "latitude="+longitude+"; expires=Fri, 10 Dec 2023 12:00:00 UTC";
+		requestString = "http://api.openweathermap.org/data/2.5/weather?lat="+ latitude + "&lon=" + longitude +"&APPID=dec6af11d23906a2380e2214c2416010";
+	    jQuery.getJSON(requestString, function(data) {
+	        
+	        // Gets Temp in Celsius
+	        var temperature = Math.round(`${data.main.temp}` - 273.15) + "°C"
+	        var weatherDescription = `${data.weather[0].description}`
+	        var weatherType = `${data.weather[0].id}`
+
+	    // Switch Statement to Choose correct weather icon for the weather
+	        switch(weatherType){
+				case "804":
+		    		document.getElementById("currentWeatherIcon").src="Assets/overcast.png"
+		    		// console.log("Set Icon to partly cloudy")
+		    		break;        	
+	        	case "801"://Party Cloudy
+	        	case "802":
+	        	case "803":
+	        		document.getElementById("currentWeatherIcon").src="Assets/partly_cloudy.png"
+	        		// console.log("Set Icon to partly cloudy")
+	        		break;
+	        	case "800"://Clear Sky
+	        		document.getElementById("currentWeatherIcon").src="Assets/clear_sky.png"
+	        		// console.log("Set Icon to clear sky")
+	        		break;
+	    		case "500":
+	    		case "520"://Light Rain
+		    		document.getElementById("currentWeatherIcon").src="Assets/light_rain.png"
+		    		// console.log("Set Icon to light rain")
+		    		break;
+	    		case "501":
+	    		case "521"://Moderate Rain
+			    		document.getElementById("currentWeatherIcon").src="Assets/moderate_rain.png"
+			    		// console.log("Set Icon to moderate rain")
+			    		break;
+			    case "502"://Heavy Rain
+			    		document.getElementById("currentWeatherIcon").src="Assets/heavy_rain.png"
+			    		// console.log("Set Icon to heavy rain")
+			    		break;
+			    case "741":
+			    case "701":
+			    case "721"://Fog
+			    		document.getElementById("currentWeatherIcon").src="Assets/Fog.png"
+			    		// console.log("Set Icon to fog")
+			    		break;
+	    		case "211":
+	    		case "200":
+	    		case "201":
+	    		case "202":
+	    		case "210":
+	    		case "212":
+	    		case "221":
+	    		case "230":
+	    		case "231":
+	    		case "232":
+			    		document.getElementById("currentWeatherIcon").src="Assets/thunderstorm.png"
+			    		// console.log("Set Icon to thunderstorm")
+			    		break;
+
+	        	default:
+	        		document.getElementById("currentWeatherIcon").src="Assets/loading.gif"
+	        }   
+	                    
+	        
+	        // $(".weather1").html(weatherData);
+	        var output=document.getElementById('weatherDescriptionLabel');
+	    	output.innerHTML= (weatherDescription);
+	    	var output=document.getElementById('weatherTemperature');
+	    	output.innerHTML= (temperature);
+	    });
+
+	});	
+	
+}
+// Gets 5-day weather
+function getFutureWeather(){
+	console.log("get future weather run")
+	// gets the JSON data from open weather map
+    // jQuery.getJSON('http://api.openweathermap.org/data/2.5/forecast/daily?id=6167865&cnt=5&APPID=dec6af11d23906a2380e2214c2416010', function(data) {
+	if (getCookie("locationSelected")){
+		var address = getCookie("locationInput");
+	}else if(getCookie("locationInput")!=false){
+		var address = getCookie("locationInput");
+	}
+	var addressString = "http://maps.google.com/maps/api/geocode/json?address="+address
+	jQuery.getJSON(addressString, function(data) {
+		latitude = data.results[0].geometry.location.lat
+		longitude = data.results[0].geometry.location.lng
+		requestString = "http://api.openweathermap.org/data/2.5/forecast/daily?lat="+ latitude + "&lon=" + longitude +"&cnt=5&APPID=dec6af11d23906a2380e2214c2416010";
+		jQuery.getJSON(requestString, function(data) {
+	    	
+
+	        var date = new Date();
+	    // Switch case to write the proper day of week
+	        switch (date.getDay()){
+	        	case 0:
+		        	var output = document.getElementById("day1");
+		    		output.innerHTML= ("Monday");
+		    		var output = document.getElementById("day2");
+		    		output.innerHTML= ("Tuesday");
+		    		var output = document.getElementById("day3");
+		    		output.innerHTML= ("Wednesday");
+		    		var output = document.getElementById("day4");
+		    		output.innerHTML= ("Thursday");
+		    		var output = document.getElementById("day5");
+		    		output.innerHTML= ("Friday");
+		    		break;
+	    		case 1:
+		        	var output = document.getElementById("day1");
+		    		output.innerHTML= ("Tuesday");
+		    		var output = document.getElementById("day2");
+		    		output.innerHTML= ("Wednesday");
+		    		var output = document.getElementById("day3");
+		    		output.innerHTML= ("Thursday");
+		    		var output = document.getElementById("day4");
+		    		output.innerHTML= ("Friday");
+		    		var output = document.getElementById("day5");
+		    		output.innerHTML= ("Saturday");
+		    		break;
+	    		case 2:
+		        	var output = document.getElementById("day1");
+		    		output.innerHTML= ("Wednesday");
+		    		var output = document.getElementById("day2");
+		    		output.innerHTML= ("Thursday");
+		    		var output = document.getElementById("day3");
+		    		output.innerHTML= ("Friday");
+		    		var output = document.getElementById("day4");
+		    		output.innerHTML= ("Saturday");
+		    		var output = document.getElementById("day5");
+		    		output.innerHTML= ("Sunday");
+		    		break;
+	    		case 3:
+		        	var output = document.getElementById("day1");
+		    		output.innerHTML= ("Thursday");
+		    		var output = document.getElementById("day2");
+		    		output.innerHTML= ("Friday");
+		    		var output = document.getElementById("day3");
+		    		output.innerHTML= ("Saturday");
+		    		var output = document.getElementById("day4");
+		    		output.innerHTML= ("Sunday");
+		    		var output = document.getElementById("day5");
+		    		output.innerHTML= ("Monday");
+		    		break;
+	    		case 4:
+		        	var output = document.getElementById("day1");
+		    		output.innerHTML= ("Friday");
+		    		var output = document.getElementById("day2");
+		    		output.innerHTML= ("Saturday");
+		    		var output = document.getElementById("day3");
+		    		output.innerHTML= ("Sunday");
+		    		var output = document.getElementById("day4");
+		    		output.innerHTML= ("Monday");
+		    		var output = document.getElementById("day5");
+		    		output.innerHTML= ("Tuesday");
+		    		break;
+	    		case 5:
+		        	var output = document.getElementById("day1");
+		    		output.innerHTML= ("Saturday");
+		    		var output = document.getElementById("day2");
+		    		output.innerHTML= ("Sunday");
+		    		var output = document.getElementById("day3");
+		    		output.innerHTML= ("Monday");
+		    		var output = document.getElementById("day4");
+		    		output.innerHTML= ("Tuesday");
+		    		var output = document.getElementById("day5");
+		    		output.innerHTML= ("Wednesday");
+		    		break;
+	    		case 6:
+		        	var output = document.getElementById("day1");
+		    		output.innerHTML= ("Sunday");
+		    		var output = document.getElementById("day2");
+		    		output.innerHTML= ("Monday");
+		    		var output = document.getElementById("day3");
+		    		output.innerHTML= ("Tuesday");
+		    		var output = document.getElementById("day4");
+		    		output.innerHTML= ("Wednesday");
+		    		var output = document.getElementById("day5");
+		    		output.innerHTML= ("Thursday");
+		    		break;
+	        }
+	    // Puts the proper weather image in 
+	        for (n = 1; n < 6; n++){
+	        	var dayTemp = "day" + n + "WeatherTemp";
+	        	var output=document.getElementById(dayTemp);
+	    		output.innerHTML= (Math.round(`${data.list[n-1].temp.day}`- 273.15) + "°C");
+	    		// var dayType = "day" + n + "WeatherDescription";
+	    		// var output=document.getElementById(dayType);
+	    		// output.innerHTML= (`${data.list[n-1].weather[0].description}`);
+	    		var element = "day"+ n + "WeatherIcon";
+	    		var weatherType = `${data.list[n-1].weather[0].id}`
+	    		switch(weatherType){
+	    			case "804":
+			    		document.getElementById(element).src="Assets/overcast.png"
+			    		// console.log("Set Icon to partly cloudy")
+			    		break;
+			    	case "801"://Party Cloudy
+			    	case "802":
+			    	case "803":
+			    		document.getElementById(element).src="Assets/partly_cloudy.png"
+			    		// console.log("Set Icon to partly cloudy")
+			    		break;
+			    	case "800"://Clear Sky
+			    		document.getElementById(element).src="Assets/clear_sky.png"
+			    		// console.log("Set Icon to clear sky")
+			    		break;
+			    	case "500":
+			    	case "520"://Light Rain
+			    		document.getElementById(element).src="Assets/light_rain.png"
+			    		// console.log("Set Icon to light rain")
+			    		break;
+		    		case "501":
+		    		case "521"://Moderate Rain
+			    		document.getElementById(element).src="Assets/moderate_rain.png"
+			    		// console.log("Set Icon to moderate rain")
+			    		break;
+			    	case "502"://Heavy Rain
+			    		document.getElementById(element).src="Assets/heavy_rain.png"
+			    		// console.log("Set Icon to heavy rain")
+			    		break;
+			    	case "741":
+			    	case "701":
+			    	case "721"://Fog
+			    		document.getElementById(element).src="Assets/Fog.png"
+			    		// console.log("Set Icon to fog")
+			    		break;
+			    	case "211":
+			    	case "200":
+		    		case "201":
+		    		case "202":
+		    		case "210":
+		    		case "212":
+		    		case "221":
+		    		case "230":
+		    		case "231":
+		    		case "232":
+			    		document.getElementById(element).src="Assets/thunderstorm.png"
+			    		// console.log("Set Icon to thunderstorm")
+			    		break;
+			    		
+		
+			    	default:
+			    		document.getElementById(element).src="Assets/loading.gif"
+
+				}
+	        }
+	    });
+
+	});	
+}
+// Gets News
+currentNewsArray = 0;
+function cycleNews(data){
+	if (getCookie("newsSelected") == false){
+		newsSource = "google-news";
+	}else{
+		newsSource = document.getElementById("newsDropDown").value;
+	}
+
+	jQuery.getJSON('https://newsapi.org/v1/articles?source='+newsSource+'&apiKey=416579f01f5946219ae65d094ab1d1f5', function(data) {
+		// Adds data to rss Scroller
+		var description=document.getElementById("rssScrollerDescription");
+		var title=document.getElementById("rssScrollerTitle");
+
+
+		if (currentNewsArray < 9){
+			description.innerHTML= `${data.articles[currentNewsArray].description}`
+			title.innerHTML= `${data.articles[currentNewsArray].title}`
+			currentNewsArray= currentNewsArray + 1;
+		}else {
+			currentNewsArray = 0;
+			description.innerHTML= `${data.articles[currentNewsArray].description}`
+			title.innerHTML= `${data.articles[currentNewsArray].title}`
+		}
+		
+	});
+	console.log("Cycling news, from: "+newsSource+" currently on "+currentNewsArray+" out of 9")
+}
+function getNews(){
+	// Calls Cycle news every 30s
+	var description=document.getElementById("rssScrollerDescription");
+	var title=document.getElementById("rssScrollerTitle");
+	description.style.webkitAnimationPlayState = "paused";
+	title.style.webkitAnimationPlayState = "paused";
+	description.style.webkitAnimationPlayState = "running";
+	title.style.webkitAnimationPlayState = "running";
+
+	console.log("get news run")
+
+}
+
+
+<!-- Google Api -->
+
+  // Client ID and API key from the Developer Console
+  var CLIENT_ID = '218101735872-sr2u0sb96rgv31um1719og809t8lp8vr.apps.googleusercontent.com';
+
+  // Array of API discovery doc URLs for APIs used by the quickstart
+  var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
+
+  // Authorization scopes required by the API; multiple scopes can be
+  // included, separated by spaces.
+  var SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
+  var authorizeButton = document.getElementById('authorize-button');
+  var signoutButton = document.getElementById('signout-button');
+  var selectCalendarButton = document.getElementById('select-calendar-button');
+  var calendarDiv = document.getElementById('calendar');
+  var checkboxes = document.getElementById('calendarCheckbox');
+
+  /**
+   *  On load, called to load the auth2 library and API client library.
+   */
+  function handleClientLoad() {
+    gapi.load('client:auth2', initClient);
+    welcomeMessage();
+	getCurrentWeather();
+	getCurrentWeatherVar = setInterval(function(){ getCurrentWeather() }, 600000);
+	getFutureWeather();
+	getFutureWeatherVar = setInterval(function(){ getFutureWeather() }, 600000);
+	getNews();
+	var2 = setInterval(function(){ getNews() }, 600000);
+
+  }
+
+  /**
+   *  Initializes the API client library and sets up sign-in state
+   *  listeners.
+   */
+  function initClient() {
+    gapi.client.init({
+      discoveryDocs: DISCOVERY_DOCS,
+      clientId: CLIENT_ID,
+      scope: SCOPES
+    }).then(function () {
+      // Listen for sign-in state changes.
+      gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+
+      // Handle the initial sign-in state.
+      updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+      authorizeButton.onclick = handleAuthClick;
+      signoutButton.onclick = handleSignoutClick;
+      selectCalendarButton.onclick = handleCalendarClick;
+    });
+  }
+
+  /**
+   *  Called when the signed in status changes, to update the UI
+   *  appropriately. After a sign-in, the API is called.
+   */
+	function updateSigninStatus(isSignedIn) {
+    if (isSignedIn) {
+		authorizeButton.style.display = 'none';
+		signoutButton.style.display = 'inline-block';
+     	selectCalendarButton.style.display = 'block';
+      	listUpcomingEvents();
+      // getCalendars();
+    } else {
+      authorizeButton.style.display = 'inline-block';
+      signoutButton.style.display = 'none';
+      selectCalendarButton.style.display = 'none';     
+    }
+  }
+  // Handles Clicking on calendar button
+	function handleCalendarClick(event){
+	  	document.getElementById('calendarSelect').style.display='none';
+	  	document.getElementById('locationSelect').style.display = 'block'
+	  	updateCalendar(true);
+
+	  	
+	  	// To do put selected Calendars in list
+	  	// Get elements from selected Calendars
+
+	  }
+  // Gets events from user's enabled calendars
+  	
+
+	var todayCalendarSayings = ["Woohoo! Nothing Today!", "How is your day free...?", "Try to do at least something productive today...", "Nothing planned today!","Focus on Impact","zzz","Try to get ahead, no events today", "Learn something new!", "Empty Day!"]
+	var tomorrowCalendarSayings = ["Sleep in tomorrow, no events!","Zilch tomorrow","Nothing tomorrow boss","Empty day tomorrow!","Do you even do anything?"+"<br />"+ "No events tomorrow", "Take it easy, no events tomorrow","zzz","You're free to have a late night","Lucky You, no events tomorrow"]
+	updateCalendarCalled = false;
+
+	function getEvents(calendarList){
+		// complicated date getting to deal with UTC
+		var allEvents = [];
+		var date = new Date();
+		var today = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString();
+		var tomorrow = new Date(date.getTime()+ (24 * 60 * 60 * 1000) - (date.getTimezoneOffset() * 60000)).toISOString();
+
+		// Randomizing empty days with cool sayings!
+		var todayCalendar = document.getElementById("calendarTodayTitle");
+		var tomorrowCalendar = document.getElementById("calendarTomorrowTitle");
+
+		for (x=0; x<calendarList.length; x++){
+			gapi.client.calendar.events.list({
+				'calendarId': calendarList[x],
+				'timeMin': (new Date()).toISOString(),
+				'showDeleted': false,
+				'singleEvents': true,
+				'maxResults': 10,
+				'orderBy': 'startTime'
+			}).then(function(response) {
+				var events = response.result.items;
+				allEvents.push(events);
+				listOfAllEvents = []
+
+				// Runs on last loop and puts all events into 1 array
+				if (allEvents.length == calendarList.length){
+					if (allEvents.length > 0) {
+
+					    for (i = 0; i < allEvents.length; i++) {
+							if (allEvents[i].length > 0) {
+								for (j = 0; j < allEvents[i].length; j++){
+									if (allEvents[i][j].start.dateTime == undefined){
+										allEvents[i][j].start.dateTime = allEvents[i][j].start.date;
+									}
+									listOfAllEvents.push(allEvents[i][j]);
+								}
+							}
+						}
+
+						// Sorting function to get events by date
+						listOfAllEvents.sort(function (a, b) {
+							if (a.start.dateTime < b.start.dateTime){
+    							return -1;
+							}else if (a.start.dateTime > b.start.dateTime){
+    							return 1;
+							}
+  							return 0;
+						});
+
+						// adds all events to proper calendar div
+						eventToday = false;
+						eventsTomorrow = false;
+						for (currentEvent = 0; currentEvent < listOfAllEvents.length; currentEvent++){
+							var event = listOfAllEvents[currentEvent];
+							var when = event.start.dateTime;
+							var atTime =""
+		
+							if (when == undefined){
+								when = event.start.date;
+								atTime = "all day";
+							}else{
+								atTime = " at " + when.slice(11,16) + " AM";
+								if (atTime[11] == 0){
+									atTime = " at " + when.slice(12,16);
+								}else if (when.substring(11,13) > 12){
+									var nt = when.substring(11,13)-12;
+									atTime = " at " + nt+when.slice(13,16) + " PM";
+									if (when.substring(11,13) < 22){
+										atTime = " at " + nt+when.slice(13,16) + " PM";
+									}
+								}
+								when = when.slice(0,10);
+							}
+							
+
+							today = today.slice(0,10);
+							tomorrow = tomorrow.slice(0,10);
+							// Check if it is today
+							if (when == today){
+								if (!eventToday){
+									eventToday = true;
+									todayCalendar.innerHTML ="";
+								}
+								
+								todayCalendar.innerHTML += (event.summary + atTime + "<br />");
+							// Check if it is tomorrow
+							}else if(when == tomorrow){
+								if (!eventsTomorrow){
+									eventsTomorrow = true;
+									tomorrowCalendar.innerHTML ="";
+								}
+								tomorrowCalendar.innerHTML+= (event.summary + atTime + "<br />");
+							}
+
+							
+							// appendPre(event.summary + ' (' + when + ')')	
+						}
+						if (!eventToday){
+							randomNumber = Math.floor((Math.random() * 9) + 1);
+							todayCalendar.innerHTML =todayCalendarSayings[randomNumber-1];
+						}
+						if (!eventsTomorrow){
+							randomNumber = Math.floor((Math.random() * 9) + 1);
+							tomorrowCalendar.innerHTML =tomorrowCalendarSayings[randomNumber-1];
+						}
+					}
+				}
+			});	
+
+		}
+		if (!updateCalendarCalled){
+			window.setInterval(function(){
+				updateCalendar();
+			}, 600000);
+			updateCalendarCalled = true;		
+		}
+
+
+	}
+	
+  // Removes Elements onbutton click for calendar selection
+	function updateCalendar(isCalendarSelected){
+		calSelected = getCookie("calendarsSelected");
+		console.log("Update Calendar by checking to see if any new calendars/events have been added")
+  		if (isCalendarSelected || calSelected){
+  			if (getCookie("calendars")!=false){
+  				l = getCookie("calendars").split(",")
+  				getEvents(l);
+  			}else{
+		  		checkboxes.style.display = 'none';
+		  		selectCalendarButton.style.display = 'none';
+		  		// Checks how many checkboxes are selected
+		  		var selectedCalendars = [];
+		  		var request=gapi.client.calendar.calendarList.list();
+		  		var checkedCalendars = [];
+		  			if (getCookie("calSelected") == false){
+						request.execute(function(resp){
+							var calendars = resp.items;
+							if (calendars.length > 10){
+								calendars.length = 10;
+							}
+							
+							for (currentCalendar = 0; currentCalendar < calendars.length; currentCalendar++){
+								var currentCheckbox = document.getElementById("calendar"+currentCalendar);
+								if (currentCheckbox.checked){
+									selectedCalendars.push(calendars[currentCalendar].id);
+								}
+							}
+							setCookie("calendarsSelected",true)
+							setCookie("calendars",selectedCalendars)
+							getEvents(selectedCalendars);
+
+						}); 
+					}else{
+
+						selectedCalendars = getCookie("calendars");
+						console.log(selectedCalendars);
+						getEvents(selectedCalendars);
+
+					}
+
+  			}
+	  		
+		}else{		
+			checkboxes.style.display = 'block';
+			selectCalendarButton.style.display = 'block';
+		}
+	}
+
+  /**
+   *  Sign in the user upon button click.
+   */
+	function handleAuthClick(event) {
+    	gapi.auth2.getAuthInstance().signIn();
+	}
+
+  /**
+   *  Sign out the user upon button click.
+   */
+	function handleSignoutClick(event) {
+    	gapi.auth2.getAuthInstance().signOut();
+	}
+
+  /**
+   * Append a pre element to the body containing the given message
+   * as its text node. Used to display the results of the API call.
+   *
+   * @param {string} message Text to be placed in pre element.
+   */
+	function appendPre(message) {
+	var pre = document.getElementById('content');
+	var textContent = document.createTextNode(message + '\n');
+	pre.appendChild(textContent);
+	}
+	
+
+
+  /**
+   * Print the summary and start datetime/date of the next ten events in
+   * the authorized user's calendar. If no events are found an
+   * appropriate message is printed.
+   */
+    function listUpcomingEvents() {
+    	document.getElementById("calendarCheckbox").innerHTML = "";
+    	var userCalendarID = [];
+		var request=gapi.client.calendar.calendarList.list();
+		request.execute(function(resp){
+			var calendars = resp.items;
+			if (calendars.length > 10){
+				calendars.length = 10;
+			}
+			for (currentCalendar = 0; currentCalendar < calendars.length; currentCalendar++){
+				// Creats the checkboxes for the user to click
+				var label= document.createElement("label");
+				var calendarName = calendars[currentCalendar].summaryOverride;
+				if (calendars[currentCalendar].summaryOverride == undefined){
+					calendarName = calendars[currentCalendar].summary
+				}
+				var description = document.createTextNode(calendarName);
+				var checkbox = document.createElement("input");
+				checkbox.type = "checkbox";    // make the element a checkbox
+				checkbox.defaultChecked = true;
+				checkbox.name = "calendar"+currentCalendar;      // give it a name we can check on the server side 
+				checkbox.class = 'checkbox';
+				checkbox.id="calendar"+currentCalendar;
+				checkbox.value=calendarName;// add the description to the element
+
+				// add the label element to your div
+				document.getElementById('calendarCheckbox').appendChild(checkbox);
+				document.getElementById('calendarCheckbox').appendChild(description);
+				// gapi.client.calendar.events.list({
+				// 	'calendarId': calendars[currentCalendar].id,
+				// 	'timeMin': (new Date()).toISOString(),
+				// 	'showDeleted': false,
+				// 	'singleEvents': true,
+				// 	'maxResults': 10,
+				// 	'orderBy': 'startTime'
+				// }).then(function(response) {
+				// 	var events = response.result.items;
+				// 	appendPre('Upcoming events:');
+
+				// if (events.length > 0) {
+				//     for (i = 0; i < events.length; i++) {
+				// 		var event = events[i];
+				// 		var when = event.start.dateTime;
+				// 		if (!when) {
+				//         when = event.start.date;
+				//     	}
+				//       	appendPre(event.summary + ' (' + when + ')')
+				//     }
+				//   }
+				// });
+			}	
+		});  
+		calSelected = getCookie("calendarsSelected");
+		if (calSelected){
+			updateCalendar(true);
+		}      
+    }
+
+	cycleNews();
+	setInterval(cycleNews, 30000);
+
+</script>
+<script async defer src="https://apis.google.com/js/api.js"
+  onload="this.onload=function(){};handleClientLoad()"
+  onreadystatechange="if (this.readyState === 'complete') this.onload()">
+</script>
+<!-- Loads weather and news info every 30 minutes 1800000 milli -->
+
+	</body>
+</html>
+
