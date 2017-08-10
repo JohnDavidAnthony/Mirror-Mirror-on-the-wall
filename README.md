@@ -2,13 +2,13 @@
 
 Simple web based application built with HTML, CSS and JavaScript. Features currently include: weather forecasts, top news from various sources, your upcoming events on your calendar, and the time.
 
-![alt text](https://user-images.githubusercontent.com/22968283/29177274-461d563c-7dbc-11e7-9cd4-92fb5dead615.jpg “Live Image“)
+[[https://user-images.githubusercontent.com/22968283/29177274-461d563c-7dbc-11e7-9cd4-92fb5dead615.jpg|alt=Live Image]]
 
-![alt text](https://user-images.githubusercontent.com/22968283/29177182-fa766750-7dbb-11e7-8ebd-b3c83281f70e.png “ScreenShot“)
+[[https://user-images.githubusercontent.com/22968283/29177182-fa766750-7dbb-11e7-8ebd-b3c83281f70e.png|alt=ScreenShot]]
 
 
 Very simple to add to your website.
-See the [live Demo!](http://johndavidanthony.me/Pages/SmartMirror/SmartMirror.html)
+See the [live Demo!](http://johndavidanthony.me/Pages/SmartMirror/SmartMirror.html) (Make sure you rescale your browser window to be portrait for best results!)
 
 ## Getting Started
 
